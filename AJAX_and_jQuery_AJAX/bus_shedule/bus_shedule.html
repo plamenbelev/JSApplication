@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bus Schedule</title>
+  <style>
+    #schedule { text-align: center; width: 400px; }
+    input { width: 120px; }
+    #info { background-color:aquamarine; border:1px solid black; margin:0.25em; }
+    .info { font-size: 1.5em; padding: 0.25em; }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div id="schedule">
+  <div id="info"><span class="info">Not Connected</span></div>
+  <div id="controls">
+    <input id="depart" value="Depart" type="button" onclick="result.depart()">
+    <input id="arrive" value="Arrive" type="button" onclick="result.arrive()" disabled="true">
+  </div>
+</div>
+<script>
+  function solve() {
+      let baseUrl = 'https://judgetests.firebaseio.com/schedule';
+      $('#info').text('Not Connected');
+      let nextStation = 'depot';
+      let station;
+    function depart(){
+        let request = {
+            url : `${baseUrl}/${nextStation}/.json`,
+            success : displayNext,
+            error : displayError,
+            complete : () => {$('#depart').attr('disabled', true);
+            $('#arrive').attr('disabled', false)
+            }
+        }
+        $.ajax(request);
+    }
+    function displayNext(res) {
+        $('#info').text(`Next stop ${res.name}`)
+        
+    }
+    function arrive() {
+        let request = {
+            url : `${baseUrl}/${nextStation}/.json`,
+            success : displayStop,
+            error : displayError,
+            complete : () => {$('#depart').attr('disabled', false);
+            $('#arrive').attr('disabled', true)
+            }
+        }
+        $.ajax(request)
+    }
+    function displayStop(res) {
+        $('#info').text(`Arriving at ${res.name}`)
+        nextStation = res.next;
+    }
+    function displayError(err){
+        $('#info').text('Error');
+        $('#depart').attr('disabled', true);
+        $('#arrive').attr('disabled', true)
+    }
+    return {
+      depart,
+      arrive
+    };
+  }
+  let result = solve();
+</script>
+</body>
+</html>
