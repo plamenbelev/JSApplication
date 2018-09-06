@@ -35,12 +35,12 @@ function attachEvents(){
         let name = $('#person').val();
         let phone = $('#phone').val();
         if (name.length === 0) {
-            error = $(`<div>Name can not be empty!</div>`).appendTo($('html'));
+            error = $('<div>Name can not be empty!</div>').appendTo($('html'));
             setTimeout(function(){ error.text(''); }, 3000);
             return;
         }
         if (phone.length === 0) {
-            error = $(`<div>Phone can not be empty!</div>`).appendTo($('html'));
+            error = $('<div>Phone can not be empty!</div>').appendTo($('html'));
             setTimeout(function(){ error.text(''); }, 3000);
             return;
         }
